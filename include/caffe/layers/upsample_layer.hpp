@@ -15,7 +15,7 @@
 namespace caffe {
 
 
-template <typename Ftype, tyepname Btype>
+template <typename Ftype, typename Btype>
 class UpsampleLayer : public Layer<Ftype, Btype> {
  public:
   explicit UpsampleLayer(const LayerParameter& param)
