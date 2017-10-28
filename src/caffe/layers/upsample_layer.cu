@@ -20,9 +20,9 @@ __global__ void UpsampleForward(const int nthreads, int in_w, int in_h,
 template <typename Ftype, typename Btype>
 void UpsampleLayer<Ftype, Btype>::Forward_gpu(const vector<Blob*>& bottom,
       const vector<Blob*>& top) {
-  const Ftype* bottom_data = bottom[0]->gpu_data();
-  const Ftype* bottom_mask = bottom[1]->gpu_data();
-  Ftype* top_data = top[0]->mutable_gpu_data();
+  const Ftype* bottom_data = bottom[0]->gpu_data<Ftype>();
+  const Ftype* bottom_mask = bottom[1]->gpu_data<Ftype>();
+  Ftype* top_data = top[0]->mutable_gpu_data<Ftype>();
   caffe_gpu_set(top[0]->count(), Ftype(0), top_data);
   int bottom_count = bottom[0]->count();
   UpsampleForward<Ftype><<<CAFFE_GET_BLOCKS(bottom_count), CAFFE_CUDA_NUM_THREADS>>>(
@@ -46,9 +46,9 @@ template <typename Ftype, typename Btype>
 void UpsampleLayer<Ftype, Btype>::Backward_gpu(const vector<Blob*>& top,
       const vector<bool>& propagate_down, const vector<Blob*>& bottom) {
   if (propagate_down[0]) {
-    const Btype* top_diff = top[0]->gpu_diff();
-    const Btype* bottom_mask = bottom[1]->gpu_data();
-    Btype* bottom_diff = bottom[0]->mutable_gpu_diff();
+    const Btype* top_diff = top[0]->gpu_diff<Btype>();
+    const Btype* bottom_mask = bottom[1]->gpu_data<Btype>();
+    Btype* bottom_diff = bottom[0]->mutable_gpu_diff<Btype>();
     const int bottom_count = bottom[0]->count();
     caffe_gpu_set(bottom_count, Btype(0.), bottom_diff);
     UpsampleBackward<Btype><<<CAFFE_GET_BLOCKS(bottom_count), CAFFE_CUDA_NUM_THREADS>>>(
