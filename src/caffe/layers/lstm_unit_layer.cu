@@ -149,6 +149,6 @@ void LSTMUnitLayer<Ftype, Btype>::Backward_gpu(const vector<Blob*>& top,
   CUDA_POST_KERNEL_CHECK;
 }
 
-INSTANTIATE_LAYER_GPU_FUNCS(LSTMUnitLayer);
+INSTANTIATE_LAYER_GPU_FUNCS_FB(LSTMUnitLayer);
 
 }  // namespace caffe

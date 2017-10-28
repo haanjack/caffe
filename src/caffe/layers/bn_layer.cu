@@ -303,5 +303,5 @@ namespace caffe {
     }
   }
 
-  INSTANTIATE_LAYER_GPU_FUNCS(BNLayer);
+  INSTANTIATE_LAYER_GPU_FUNCS_FB(BNLayer);
 }  // namespace caffe

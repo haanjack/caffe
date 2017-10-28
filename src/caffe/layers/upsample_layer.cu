@@ -7,17 +7,17 @@
 namespace caffe {
 
 template <typename Ftype, typename Btype>
-  __global__ void UpsampleForward(const int nthreads, int in_w, int in_h,
-      int out_w, int out_h, const Ftype* bottom_data,
-      const Ftype* bottom_mask, Ftype* top_data) {
-    CUDA_KERNEL_LOOP(index, nthreads) {
-      int offset = index / (in_w * in_h) * out_w * out_h;
-      int upsample_idx = static_cast<int>(bottom_mask[index]);
-      top_data[offset + upsample_idx] = bottom_data[index];
-    }
+__global__ void UpsampleForward(const int nthreads, int in_w, int in_h,
+    int out_w, int out_h, const Ftype* bottom_data,
+    const Ftype* bottom_mask, Ftype* top_data) {
+  CUDA_KERNEL_LOOP(index, nthreads) {
+    int offset = index / (in_w * in_h) * out_w * out_h;
+    int upsample_idx = static_cast<int>(bottom_mask[index]);
+    top_data[offset + upsample_idx] = bottom_data[index];
   }
+}
 
-template <typename Ftype typename Btype>
+template <typename Ftype, typename Btype>
 void UpsampleLayer<Ftype, Btype>::Forward_gpu(const vector<Blob*>& bottom,
       const vector<Blob*>& top) {
   const Ftype* bottom_data = bottom[0]->gpu_data();
@@ -31,7 +31,7 @@ void UpsampleLayer<Ftype, Btype>::Forward_gpu(const vector<Blob*>& bottom,
   CUDA_POST_KERNEL_CHECK;
 }
 
-template <typename Ftype typename Btype>
+template <typename Ftype, typename Btype>
   __global__ void UpsampleBackward(const int nthreads, int in_w, int in_h,
       int out_w, int out_h, const Btype* top_diff,
       const Btype* bottom_mask, Btype* bottom_diff) {
@@ -42,7 +42,7 @@ template <typename Ftype typename Btype>
     }
   }
 
-template <typename Ftype typename Btype>
+template <typename Ftype, typename Btype>
 void UpsampleLayer<Ftype, Btype>::Backward_gpu(const vector<Blob*>& top,
       const vector<bool>& propagate_down, const vector<Blob*>& bottom) {
   if (propagate_down[0]) {
@@ -59,7 +59,7 @@ void UpsampleLayer<Ftype, Btype>::Backward_gpu(const vector<Blob*>& top,
 }
 
 
-INSTANTIATE_LAYER_GPU_FUNCS(UpsampleLayer);
+INSTANTIATE_LAYER_GPU_FUNCS_FB(UpsampleLayer);
 
 
 }  // namespace caffe
